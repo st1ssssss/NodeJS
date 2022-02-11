@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<script src="https://cdn.socket.io/3.1.1/socket.io.min.js"
+    integrity="sha384-gDaozqUvc4HTgo8iZjwth73C6dDDeOJsAgpxBcMpZYztUfjHXpzrpdrHRdVp8ySO"
+    crossorigin="anonymous"></script>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Socket HW</title>
+</head>
+
+<body>
+    <div id="clientCount"></div>
+    <input type="text" id="input" autofocus>
+    <input type="submit" id="send" value="Send">
+    <div id="messages"></div>
+</body>
+
+<script type="text/javascript">
+    const socket = io('localhost:8888')
+
+    const addMsg = msg => {
+        const msgSpan = `<span>${msg.name} ${msg.msg}</span>`
+
+        document.getElementById('messages').insertAdjacentHTML('beforeend', msgSpan)
+        document.getElementById('messages').insertAdjacentHTML('beforeend', '<br>')
+    }
+
+    socket.on('connect', () => {
+        console.log('Successful connection')
+
+    })
+
+    socket.on('SERVER_MSG', (data) => {
+        addMsg(data)
+    })
+
+
+    document.getElementById('send').onclick = () => {
+        socket.emit('CLIENT_MSG', { msg: document.getElementById('input').value })
+        document.getElementById('input').value = ''
+    }
+
+
+</script>
+
+</html>
